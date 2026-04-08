@@ -536,79 +536,36 @@
         </section>
 
         <section class="section experiment-section">
-            <h2 class="section-title">AlldayWalker Algorithms</h2>
+            <h2 class="section-title">Uni-SkillEvolver Algorithms</h2>
             <div style="height: 10%;width: auto;">
                 <div class="image-container">
-                    <img src="static/algorithm1.png" alt="Main picture" width="85%" height="auto">
+                    <img src="static/F3.png" alt="Main picture" width="85%" height="auto">
                 </div>
                 <div class="image-container">
-                    <img src="static/algorithm2.png" alt="Main picture" width="85%" height="auto">
+                    <img src="static/F4.png" alt="Main picture" width="85%" height="auto">
                 </div>
             </div>
-            <p class="content-text">For clarity, a summary of the proposed AlldayWalker learning algorithm and the inference algorithm is provided above.</p>
+            <p class="content-text">Overall, under the LRSL setting, we summarize the lifelong training and task-agnostic inference pipelines of Uni-SkillEvolver in Algorithm 1 and Algorithm 2, respectively.</p>
         </section>
 
         <section class="section">
             <h2 class="section-title">Task Setting</h2>
             <div class="image-container">
-                <img src="static/F6.png" alt="Main picture">
+                <img src="static/F5.png" alt="Main picture">
             </div>
             <p class="content-text">
-                Illustration of our all-day multi-scenes lifelong VLN Benchmark setting. The normal environment is marked in green color, low light is marked blue, scattering is marked yellow, and overexposure is marked in purple.
+                Illustration of the established lifelong robotic skill learning benchmark. We establish a total of 27 robotic skills, including the first 23 robotic skill tasks for lifelong learning and the last 4 skill tasks for evaluating the generalization performance. The established benchmarks encompass a diverse range of robotic skills, including manipulation using the UR-5 robotic arm, manipulation using the Franka robotic arm, Vision-Language Navigation (VLN) in the Habitat simulator or using DeepRobotDog lite2, Object Localization Navigation (OLN), and Dialogue Understanding Navigation (DUN).
             </p>
         </section>
 
         <section class="section experiment-section">
             <h2 class="section-title">Real-World Experiments</h2>
-            <h2 class="section-subtitle">robotic navigation system introduction</h2>
+            <h2 class="section-subtitle">Illustration of robotic navigation and manipulation platforms.</h2>
             <div class="image-container">
-                <img src="static/FFF.jpg" alt="Main picture">
+                <img src="static/F6.png" alt="Main picture">
             </div>
             <div class="content-text">
-                The platform consists of a DeepRobotDog Lite2 quadruped robot, a Hikvision DS-E12 camera, a portable WiFi communication module, and a remote computation server equipped with an NVIDIA A6000 GPU. During deployment, the Hikvision DS-E12 mounted on the robot captures RGB visual streams from the real environment, providing essential perception signals for navigation and scene understanding. These visual data are transmitted in real time to the remote server through the portable WiFi module. The server performs inference using the proposed AlldayWalker system running on the A6000 GPU, which processes both user instructions and visual observations to generate navigation actions. The resulting control signals are then sent back to the DeepRobotDog Lite2 via the wireless communication channel. The robot executes these actions in the physical environment, enabling closed-loop interaction between perception, language reasoning, and embodied control. This platform supports flexible and robust experimentation of all-day multi-scene lifelong navigation, bridging simulation and real-world deployment.  
-            </div>
-            <h2 class="section-subtitle">Vision-Language Navigation in Real World</h2>
-            
-
-            <div class="content-text">
-                <div class="video-container">
-                    <!-- left video -->
-                    <div class="video-card">
-                        <div class="video-meta">
-                            <h3 class="video-scene">Scene: real-world 2</h3>
-                            <h3 class="video-environment">Environment: Normal</h3>
-                        </div>
-                        <div class="video-wrapper">
-                            <video controls>
-                                <source src="static/video-Real/002.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <div class="video-overlay">Speed 1X</div>
-                        </div>
-                        <h3 class="video-instruction">
-                            <p style="color: red;font-weight: bold;font-size: 22px;">Task21</p>
-                            Walk straight ahead, bypass the pole on the left, and find the cup in the middle of the blue cone and in front of the yellow cone.
-                        </h3>
-                    </div>
-                    <!-- right video -->
-                    <div class="video-card">
-                        <div class="video-meta">
-                            <h3 class="video-scene">Scene: real-world 1</h3>
-                            <h3 class="video-environment">Environment: Low-light</h3>
-                        </div>
-                        <div class="video-wrapper">
-                            <video controls>
-                                <source src="static/video-Real/001.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <div class="video-overlay">Speed 1X</div>
-                        </div>
-                        <h3 class="video-instruction">
-                            <p style="color: red;font-weight: bold;font-size: 22px;">Task22</p>
-                            Find the red cone-shaped barrel on the right, pass through from the left side, then pass to the right of the blue cone-shaped barrel in front, and finally find the red ball next to the cardboard box.
-                        </h3>
-                    </div>
-                </div>
+                We deploy both real-world navigation and manipulation systems to evaluate the continual learning performance of Uni-SkillEvolver in physical environments. As shown in Fig.6 a), the robotic manipulation platform is constructed based on a UR-5 robotic arm. The system integrates a RealSense SR300 camera for scene perception, a control cabinet for low-level robotic actuation computing, and a GPU computation platform with an NVIDIA A6000 Ada GPU for high-level act reasoning. Given a user instruction, the Uni-SkillEvolver agent deployed on the computation platform interprets the task and generates corresponding manipulation actions conditioned on visual observations. The perception data are captured and transmitted to the agent, which outputs control commands that are executed by the UR-5 arm through standard communication interfaces (i.e., RS485 and TCP). This perception–reasoning–action loop enables the robot to perform diverse manipulation tasks in real-world settings. As shown in Fig.6 b), the navigation platform is built upon a DeepRobotDog Lite2 quadruped robot. The system is equipped with an onboard Hikvision DS-E112 camera for visual perception and a Wi-Fi-based wireless communication module for real-time data transmission. During deployment, the robot continually captures first-person visual observations from the environment, which are streamed to a remote computation server with a GPU computation platform with an NVIDIA A6000 Ada GPU. The server runs the Uni-SkillEvolver to process visual inputs together with language instructions and predict navigation actions. These actions are then transmitted back to the robot via the wireless channel, enabling closed-loop interaction between perception, reasoning, and control in real-world scenes. Following the previous methods, we collect 200-300 data samples for each skill task as the training set for lifelong learning. In addition, we collect 25 completely independent data samples as the test set for evaluation. Each sample is manually annotated with the corresponding skill instructions. 
             </div>
 
 
