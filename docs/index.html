@@ -497,7 +497,6 @@
                 <p><sup>3</sup> School of Computing, National University of Singapore, Singapore</p>
                 <p><sup>4</sup> Mohamed bin Zayed University of Artificial Intelligence, Abu Dhabi, UAE</p>
                 <p><sup>5</sup> Institute of Artificial Intelligence, Beihang University, Beijing, China; Hangzhou Innovation Institute, Beihang University, Hangzhou, China</p>
-                <p class="note"><sup>†</sup> Corresponding author: Zhi Han.</p>
             </div>
 
             <div class="buttons">
@@ -515,18 +514,13 @@
         </div>
 
         <div class="content-text">
-            The proposed <strong>All-day Multi-scenes Lifelong Vision-and-Language Navigation</strong> (AML-
-            VLN) task and AlldayWalker with Tucker Adaptation (TuKA). The AML-VLN requires navigation
-            agents to continually learning across multiple scenes and multiple environments (low-light, over-
-            exposure, and scattering), thereby progressively consolidating navigation knowledge to evolve con-
-            tinually and achieve all-day multi-scenes navigation. TuKA decouples navigation knowledge and
-            represents it in a high-dimensional space to continuously learn specific and shared knowledge.
+            Illustration of the proposed Lifelong Robotic Skills Learning (LRSL) task. It requires robotic agents to continually learn new robotic skills, including manipulation and navigation, across different robotic bodies within the dynamic open world. Similar to humans, as agents acquire various skills through lifelong learning, their skill knowledge continually consolidates and accumulates, ultimately achieving a universal robotic agent. 
         </div>
         
         <div class="abstract-content">
             <h2 class="section-title">Abstract</h2>
             <div class="abstract-text">
-                Deploying vision-and-language navigation (VLN) agents requires adaptation across diverse scenes and environments, but fine-tuning on a specific scenario often causes catastrophic forgetting in others, which severely limits flexible long-term deployment. We formalize this challenge as the all-day multi-scenes lifelong VLN (AML-VLN) problem. Existing parameter-efficient adapters (e.g., LoRA and its variants) are limited by their two-dimensional matrix form, which fails to capture the multi-hierarchical navigation knowledge spanning multiple scenes and environments. To address this, we propose Tucker Adaptation (TuKA), which represents the multi-hierarchical navigation knowledge as a high-order tensor and leverages Tucker decomposition to decouple the knowledge into shared subspaces and scenario-specific experts. We further introduce a decoupled knowledge incremental learning strategy to consolidate shared subspaces while constraining specific experts for decoupled lifelong learning. Building on TuKA, we also develop a VLN agent named AlldayWalker, which continually learns across multiple navigation scenarios, achieving all-day multi-scenes navigation. Extensive experiments show that AlldayWalker consistently outperforms state-of-the-art baselines.
+                Recent large-scale vision-language models have significantly advanced robotic skill learning, promoting progress in both vision-and-language navigation and vision-language-action manipulation. However, existing robotic agents are typically trained under static multi-task settings, which limits their ability to continually acquire new skills in dynamic open-world environments without catastrophically forgetting previously learned ones. To address this limitation, we formulate a new problem, termed Lifelong Robotic Skills Learning (LRSL), where an embodied agent is required to continuously learn a sequence of navigation and manipulation skills across different robotic embodiments, while preserving prior knowledge and performing task-agnostic inference without access to task identities. To solve LRSL, we propose Uni-SkillEvolver, a unified lifelong robotic agent that explicitly decomposes robotic skill knowledge into skill-shared and skill-specific components. Specifically, we design an Orthogonal Decoder-Extension LoRA (ODE-LoRA) to model transferable shared knowledge with a common encoder subspace and progressively expand skill-specific knowledge with orthogonal decoder subspaces. We further design a Task-aware Interlayer Sparse Injection strategy to selectively inject skill-specific adaptations into the most appropriate layers, and a Task Semantic-aware Decoder Activation strategy to retrieve and activate relevant decoder experts for task-agnostic skill execution based on instruction semantics. Extensive experiments across both simulator environments and real-world robotic platforms demonstrate that Uni-SkillEvolver consistently outperforms state-of-the-art baselines.
             </div>
         </div>
 
@@ -534,48 +528,10 @@
             <h2 class="section-title">Method</h2>
 
             <div class="image-container">
-                <img src="static/F2.jpg" alt="Main picture">
+                <img src="static/F2.png" alt="Main picture">
             </div>
 
-            <p class="content-text">Illustration for comparison of existing LoRA and our TuKA architecture. Different from the LoRA or MoE-LoRA variants, which represent simple knowledge within a two-hierarchical matrix, TuKA decoupling represents the multi-hierarchical knowledge within a high-order tensor. </p>
-
-            <div class="image-container">
-                <img src="static/F3.png" alt="Main picture">
-            </div>
-
-            <div class="content-text">
-                llustration of the proposed <strong>Decoupled Knowledge Incremental Learning.</strong> Our TuKA per-
-                forms decoupled representation and incremental learning of knowledge in a high-dimensional space.
-            </div>
-
-            <div class="content-paper-text">
-                In order to learn the $t$-th navigation scenario task (with the $s$-th scene and the $e$-th environment) $T_{t} = \{S_{s},E_{e}\}$, 
-                we propose a new type of finetuning method named Tucker-Adaption (TuKA) to finetune the pretrained StreamVLN agent $\mathcal{F}_{\theta_{0}}$, 
-                in a higher-dimensional space, on the task-specific data $S_{t}=\{\mathcal{O}_{t},\mathcal{I}_{t}\}$, and then obtain an updated model $\mathcal{F}_{\theta'_{t}}$, 
-                where $\theta'_{t}=\theta_{0}+\Delta\theta_{t}$, $\Delta\theta_{t} = \{\Delta W^{l}_{t}\}^{L}_{l=1}$, 
-                and $\Delta W^{l}_{t}\in\mathbb{R}^{a_{l} \times b_{l}}$ is the updated weight in $l$-th layer of a total of $L$ transformer layers for task $T_{t}$. 
-                In our TuKA, we follow the Tensor Tucker Decomposition Approach (<a href="#" class="citation">TAKE</a>) to decouple the higher-order tensor knowledge for better multi-hierarchical navigation knowledge learning. 
-                
-                Specifically, a four-order tensor $\mathcal{X} \in \mathbb{R}^{a\times b\times M \times N}$ can be decomposed into:
-                
-                $$\mathcal{X} = \mathcal{G} \times_{1} U^{1} \times_{2} U^{2} \times_{3} U^{3} \times_{4} U^{4}, \tag{1}$$
-                
-                where $\times_{n}, n=1,2,3,4$ denotes the $n$-th modal product of the tensor and matrix. 
-                $\color{orange}{\mathcal{G}}\in \mathbb{R}^{r_{1}\times r_{2}\times r_{3}\times r_{4}}$ is core tensor, 
-                which contains interaction information between all patterns, and is used to learn the $\color{orange}{\text{navigation-shared knowledge}}$. 
-                    
-                The factor matrix $\color{orange}{U^{1}} \in \mathbb{R}^{a \times r_{1}}$ represents the transformation pattern of the feature from $r_{1}$ dimension to $a$, 
-                which can be regarded as a decoder; $\color{orange}{U^{2}} \in \mathbb{R}^{b \times r_{2}}$ represents the transformation pattern of the feature from $b$ dimension to $r_{2}$, 
-                which can be regarded as a encoder. The factor matrix $\color{purple}{U^{3}} \in \mathbb{R}^{M \times r_{3}}$ represents the $M$ group of scene experts, 
-                with each scene expert $\color{purple}{U^{3}[i,:]}$ is used to learn the $i$-th $\color{purple}{\text{specific scene knowledge}}$; $\color{cyan}{U^{4}} \in \mathbb{R}^{N \times r_{4}}$ represents $N$ group of environment experts, 
-                with each expert $\color{cyan}{U^{4}[j,:]}$ is used to learn the $j$-th $\color{cyan}{\text{specific environment knowledge}}$. 
-                
-                
-                Thus, for the $t$-th scenario with $s$-th scene and $e$-th environment adaptation, 
-                we extract the task-specific matrices $U^{3}[s,:]$ and $U^{4}[e,:]$ from the high-order tensor $\mathcal{X}$ to constitute weight $W_{t}$: 
-                
-                $$\Delta W_{t} = U^{1} \cdot(\mathcal{G} \times_{3} U^{3}[s,:] \times_{4} U^{4}[e,:]) \cdot (U^{2})^{T}. \tag{2}$$
-            </div>
+            <p class="content-text">Illustration of the proposed Uni-SkillEvolver pipeline. It includes (a) an Orthogonal Decoder Extension LoRA (ODE-LoRA) to explicitly decompose the robotic skill knowledge into skill-shared and skill-specific components; (b) a Task-aware Interlayer Sparse Injection (TISI) strategy to dynamically allocate skill-specific intermediate-layer injections for different robotic skills, improving the representation of specific skill knowledge; (c) a Task Semantic-aware Decoder Activation (TSDA) strategy to aggregate the learned knowledge to achieve any id-agnostic skill inference. </p>
             
         </section>
 
