@@ -105,3 +105,5 @@ activate_ode_lora_experts(vla, expert_group)
 ```
 
 After activation, call the original UniVLA policy forward or evaluation code.
+
+**The cleaned source code will be released entirely when the manuscript is accepted**:
